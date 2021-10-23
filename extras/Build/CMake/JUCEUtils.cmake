@@ -736,10 +736,15 @@ function(_juce_add_resources_rc source_target dest_target)
 endfunction()
 
 function(_juce_configure_app_bundle source_target dest_target)
-    set_target_properties(${dest_target} PROPERTIES
-        JUCE_TARGET_KIND_STRING "App"
-        MACOSX_BUNDLE TRUE
-        WIN32_EXECUTABLE TRUE)
+    if(WIN32)
+        set_target_properties(${dest_target} PROPERTIES
+            JUCE_TARGET_KIND_STRING "App"
+            WIN32_EXECUTABLE TRUE)
+    else()
+        set_target_properties(${dest_target} PROPERTIES
+            JUCE_TARGET_KIND_STRING "App"
+            MACOSX_BUNDLE TRUE)
+    endif()
 
     _juce_add_resources_rc(${source_target} ${dest_target})
 
@@ -1016,7 +1021,11 @@ function(_juce_link_plugin_wrapper shared_code_target kind)
     if(CMAKE_SYSTEM_NAME STREQUAL "Android")
         add_library(${target_name} SHARED)
     elseif((kind STREQUAL "Standalone") OR (kind STREQUAL "AUv3"))
-        add_executable(${target_name} WIN32 MACOSX_BUNDLE)
+        if(WIN32)
+            add_executable(${target_name} WIN32)
+        else()
+            add_executable(${target_name} MACOSX_BUNDLE)
+        endif()
     else()
         add_library(${target_name} MODULE)
     endif()
