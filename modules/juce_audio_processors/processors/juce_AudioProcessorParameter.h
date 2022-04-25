@@ -284,6 +284,11 @@ public:
     //==============================================================================
     /** @internal */
     void sendValueChangedMessageToListeners (float newValue);
+    
+    juce::ChangeBroadcaster &getDestructionBroadcaster()
+    {
+        return destructionBroadcaster;
+    }
 
 private:
     //==============================================================================
@@ -294,6 +299,8 @@ private:
     CriticalSection listenerLock;
     Array<Listener*> listeners;
     mutable StringArray valueStrings;
+    
+    ChangeBroadcaster destructionBroadcaster;
 
    #if JUCE_DEBUG
     bool isPerformingGesture = false;
