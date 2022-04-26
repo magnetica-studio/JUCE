@@ -1492,7 +1492,6 @@ AudioProcessorParameter::AudioProcessorParameter() noexcept {}
 
 AudioProcessorParameter::~AudioProcessorParameter()
 {
-    destructionBroadcaster.sendSynchronousChangeMessage();
    #if JUCE_DEBUG && ! JUCE_DISABLE_AUDIOPROCESSOR_BEGIN_END_GESTURE_CHECKING
     // This will fail if you've called beginChangeGesture() without having made
     // a corresponding call to endChangeGesture...
