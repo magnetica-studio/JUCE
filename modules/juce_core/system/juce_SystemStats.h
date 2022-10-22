@@ -2,7 +2,7 @@
   ==============================================================================
 
    This file is part of the JUCE library.
-   Copyright (c) 2020 - Raw Material Software Limited
+   Copyright (c) 2022 - Raw Material Software Limited
 
    JUCE is an open source library subject to commercial or open-source
    licensing.
@@ -71,7 +71,8 @@ public:
         Windows7        = Windows | 4,
         Windows8_0      = Windows | 5,
         Windows8_1      = Windows | 6,
-        Windows10       = Windows | 7
+        Windows10       = Windows | 7,
+        Windows11       = Windows | 8
     };
 
     /** Returns the type of operating system we're running on.
@@ -234,8 +235,10 @@ public:
 
 
     //==============================================================================
-    // This method was spelt wrong! Please change your code to use getCpuSpeedInMegahertz() instead
-    JUCE_DEPRECATED_WITH_BODY (static int getCpuSpeedInMegaherz(), { return getCpuSpeedInMegahertz(); })
+   #ifndef DOXYGEN
+    [[deprecated ("This method was spelt wrong! Please change your code to use getCpuSpeedInMegahertz instead.")]]
+    static int getCpuSpeedInMegaherz() { return getCpuSpeedInMegahertz(); }
+   #endif
 
 private:
     SystemStats() = delete; // uses only static methods
