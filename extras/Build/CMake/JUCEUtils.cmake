@@ -1102,10 +1102,12 @@ function(_juce_get_vst3_category_string target out_var)
             list(INSERT vst3_categories 0 Instrument)
         endif()
 
-        if(Fx IN_LIST vst3_categories)
-            list(REMOVE_ITEM vst3_categories Fx)
-            list(INSERT vst3_categories 0 Fx)
-        endif()
+        # https://github.com/magnetica-studio/threeDX/issues/930
+        # https://forum.juce.com/t/plugin-for-nuendo-surround-panner-with-juce6/42964/4
+        # if(Fx IN_LIST vst3_categories)
+        #     list(REMOVE_ITEM vst3_categories Fx)
+        #     list(INSERT vst3_categories 0 Fx)
+        # endif()
     endif()
 
     string(REGEX REPLACE ";" "|" result "${vst3_categories}")
