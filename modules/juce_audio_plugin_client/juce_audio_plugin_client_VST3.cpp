@@ -4310,3 +4310,47 @@ JUCE_END_IGNORE_WARNINGS_GCC_LIKE
 JUCE_END_NO_SANITIZE
 
 #endif //JucePlugin_Build_VST3
+
+#include <vector>
+#include <juce_audio_processors/juce_audio_processors.h>
+
+namespace juce {
+
+// JUCE は Host 側のスピーカー構成を JUCE 側の期待するスピーカー構成に自動で読み替えるので、
+// もとの Host 側のスピーカー構成を復元するためにこの関数を定義している。
+std::vector<int> getVST3InputChannelMapping (AudioProcessor * proc)
+{
+    jassert(proc != nullptr);
+    jassert(proc->getBusesLayout().inputBuses.size() > 0);
+
+#if JucePlugin_Build_VST3
+
+    ClientBufferMapper bufferMapper;
+    bufferMapper.updateFromProcessor(*proc);
+    bufferMapper.prepare(256);
+
+    auto const & inMap = bufferMapper.getInputMap()[0];
+
+    std::vector<int> ret(inMap.size());
+
+    for(int vstCh = 0; vstCh < inMap.size(); ++vstCh) {
+
+        auto const juceCh = inMap.getJuceChannelForVst3Channel(vstCh);
+        ret[juceCh] = vstCh;
+    }
+    
+    return ret;
+
+#else
+    
+    std::vector<int> ret(proc->getBusesLayout().inputBuses[0].size());
+    for(int vstCh = 0; vstCh < ret.size(); ++vstCh) {
+        ret[vstCh] = vstCh;
+    }
+    
+    return ret;
+
+#endif
+}
+
+}
